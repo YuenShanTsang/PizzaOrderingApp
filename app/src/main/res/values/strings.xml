@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Pizza Ordering App</string>
+    <string name="pizzaOrder_text">Any topping on you pizza?</string>
+    <string name="pizza_image">Pizza</string>
+    <string name="selectTopping_text">Select toppings:</string>
+    <string name="topping_spinner">Topping</string>
+    <string name="request_text">Special request?</string>
+    <string name="input_editText">Enter your request</string>
+    <string name="submit_button">Submit</string>
 </resources>
