@@ -9,6 +9,11 @@
         android:id="@+id/topping_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@{topping.name}" />
+        android:text="@{topping.name}"
+        android:textSize="20sp"
+        android:checkMark="@drawable/checkbox_selector"
+        android:textColor="@color/material_dynamic_neutral30"
+        android:checkable="true"/>
+
 </FrameLayout>
 
