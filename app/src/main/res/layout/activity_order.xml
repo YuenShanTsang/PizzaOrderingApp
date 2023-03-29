@@ -1,9 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Order">
+    android:orientation="vertical"
+    android:weightSum="5">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!--Upper part: Order list-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!--Title-->
+        <TextView
+            android:id="@+id/past_order_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="@string/pastOrder_text"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <!--Orders-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/todo_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp" />
+
+    </LinearLayout>
+
+    <!--Lower part: Buttons-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!--Change Button-->
+        <Button
+            android:id="@+id/change_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:drawableEnd="@drawable/change_icon"
+            android:text="@string/change_button"
+            android:textColor="@color/material_dynamic_neutral30"
+            tools:ignore="ButtonStyle" />
+
+        <!--Delete Button-->
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:drawableEnd="@drawable/delete_icon"
+            android:text="@string/delete_button"
+            android:textColor="@color/material_dynamic_neutral30"
+            tools:ignore="ButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>
