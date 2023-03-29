@@ -50,6 +50,13 @@ class ToppingAdapter(private val toppings: List<Topping>) : RecyclerView.Adapter
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val toppingName: CheckedTextView = view.findViewById(R.id.topping_name)
+
+        init {
+            // Add OnClickListener to toggle the checkbox state
+            toppingName.setOnClickListener {
+                toppingName.isChecked = !toppingName.isChecked
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
