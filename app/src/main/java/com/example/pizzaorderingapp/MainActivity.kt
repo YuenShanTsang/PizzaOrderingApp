@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckedTextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         binding.submitButton.setOnClickListener {
             // Iterate over the toppings in the adapter and add the selected ones to the list
             val adapter = binding.toppingListRecyclerView.adapter as ToppingAdapter
+            val selectedToppings = mutableListOf<Topping>()
             for (i in 0 until adapter.itemCount) {
                 val holder = binding.toppingListRecyclerView.findViewHolderForAdapterPosition(i) as? ToppingAdapter.ViewHolder
                 if (holder != null && holder.toppingName.isChecked) {
@@ -42,21 +44,30 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // Create the order object
-            val order = Order(selectedToppings)
+            if (selectedToppings.isNotEmpty()) {
+                // Create the order object
+                val order = Order(selectedToppings)
 
-            // Process the order
-            OrderProcessor.processOrder(this, order)
+                // Process the order
+                OrderProcessor.processOrder(this, order)
+
+                // Write the selected toppings to a file
+                val file = File(this.filesDir, "selected_toppings.txt")
+                file.writeText(selectedToppings.joinToString(",") { it.toppings })
 
 
-            // Write the selected toppings to a file
-            val file = File(this.filesDir, "selected_toppings.txt")
-            file.writeText(selectedToppings.joinToString(",") { it.toppings })
+                // Clear the selected toppings list and show a toast message
+                selectedToppings.clear()
+                (binding.toppingListRecyclerView.adapter as? ToppingAdapter)?.notifyDataSetChanged()
+                Toast.makeText(this, "Order submitted successfully!", Toast.LENGTH_SHORT).show()
 
-            // Start the PastOrder activity with the selected toppings
-            val intent = Intent(this, PastOrder::class.java)
-            intent.putExtra("selectedToppings", selectedToppings.toTypedArray())
-            startActivity(intent)
+                // Start the PastOrder activity with the selected toppings
+                val intent = Intent(this, PastOrder::class.java)
+                intent.putExtra("selectedToppings", selectedToppings.map { it.toppings }.toTypedArray())
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Please select at least one topping!", Toast.LENGTH_SHORT).show()
+            }
         }
 
     }
