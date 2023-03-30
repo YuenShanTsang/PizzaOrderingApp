@@ -5,15 +5,16 @@
     android:gravity="center_vertical"
     android:minHeight="48dp">
 
-<CheckedTextView
+    <!--Topping Display-->
+    <CheckedTextView
         android:id="@+id/topping_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@{topping.name}"
-        android:textSize="20sp"
         android:checkMark="@drawable/checkbox_selector"
+        android:checkable="true"
+        android:text="@{topping.name}"
         android:textColor="@color/material_dynamic_neutral30"
-        android:checkable="true"/>
+        android:textSize="20sp" />
 
 </FrameLayout>
 
