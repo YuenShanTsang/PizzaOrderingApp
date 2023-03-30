@@ -16,7 +16,7 @@
 
         <!--Title-->
         <TextView
-            android:id="@+id/past_order_text_view"
+            android:id="@+id/order_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -29,8 +29,8 @@
             android:textStyle="bold" />
 
         <!--Orders-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/todo_list_view"
+        <ListView
+            android:id="@+id/selected_toppings_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="fill"
@@ -70,6 +70,7 @@
             android:text="@string/delete_button"
             android:textColor="@color/material_dynamic_neutral30"
             tools:ignore="ButtonStyle" />
+
 
     </LinearLayout>
 

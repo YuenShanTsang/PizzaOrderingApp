@@ -10,11 +10,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pizzaorderingapp.databinding.ActivityMainBinding
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
     // View binding
     private lateinit var binding: ActivityMainBinding
+
+    // List to store selected toppings
+    private val selectedToppings = mutableListOf<Topping>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,16 +29,40 @@ class MainActivity : AppCompatActivity() {
 
         // Set up the RecyclerView with the ToppingAdapter and the list of Topping enum values
         val toppings = Topping.values().toList()
-        binding.todoListRecyclerView.adapter = ToppingAdapter(toppings)
-        binding.todoListRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.toppingListRecyclerView.adapter = ToppingAdapter(toppings)
+        binding.toppingListRecyclerView.layoutManager = LinearLayoutManager(this)
 
         binding.submitButton.setOnClickListener {
+            // Iterate over the toppings in the adapter and add the selected ones to the list
+            val adapter = binding.toppingListRecyclerView.adapter as ToppingAdapter
+            for (i in 0 until adapter.itemCount) {
+                val holder = binding.toppingListRecyclerView.findViewHolderForAdapterPosition(i) as? ToppingAdapter.ViewHolder
+                if (holder != null && holder.toppingName.isChecked) {
+                    selectedToppings.add(adapter.toppings[i])
+                }
+            }
+
+            // Create the order object
+            val order = Order(selectedToppings)
+
+            // Process the order
+            OrderProcessor.processOrder(this, order)
+
+
+            // Write the selected toppings to a file
+            val file = File(this.filesDir, "selected_toppings.txt")
+            file.writeText(selectedToppings.joinToString(",") { it.toppings })
+
+            // Start the PastOrder activity with the selected toppings
             val intent = Intent(this, PastOrder::class.java)
+            intent.putExtra("selectedToppings", selectedToppings.toTypedArray())
             startActivity(intent)
         }
+
     }
 
 }
+
 
 
 
@@ -53,7 +81,7 @@ enum class Topping(val toppings: String) {
 
 
 
-class ToppingAdapter(private val toppings: List<Topping>) : RecyclerView.Adapter<ToppingAdapter.ViewHolder>() {
+class ToppingAdapter(internal val toppings: List<Topping>) : RecyclerView.Adapter<ToppingAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val toppingName: CheckedTextView = view.findViewById(R.id.topping_name)
@@ -80,5 +108,3 @@ class ToppingAdapter(private val toppings: List<Topping>) : RecyclerView.Adapter
         return toppings.size
     }
 }
-
-
