@@ -6,7 +6,7 @@
     android:minHeight="48dp">
 
     <!--Past Order Display-->
-    <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <CheckedTextView
         android:id="@+id/past_order_item_checkbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
