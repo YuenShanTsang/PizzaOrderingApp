@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:checkMark="?android:attr/listChoiceIndicatorSingle"
         android:gravity="center_vertical"
+        android:layout_margin="15dp"
         android:padding="16dp"
         android:textSize="18sp" />
 

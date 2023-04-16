@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/order_item"
+        android:icon="@drawable/order_icon"
+        android:title="@string/order_text"
+        app:showAsAction="ifRoom" />
+    <!--Night mode text-->
+    <item android:title="@string/night_text"
+        app:showAsAction="ifRoom"/>
+    <!--Night mode switch-->
+    <item android:id="@+id/night_switch"
+        android:title="@string/night_text"
+        app:actionViewClass="android.widget.Switch"
+        app:showAsAction="always"/>
+</menu>

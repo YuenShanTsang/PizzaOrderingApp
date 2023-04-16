@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:minHeight="48dp">
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
 
     <!--Topping Display-->
     <CheckedTextView
         android:id="@+id/topping_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_margin="15dp"
         android:checkMark="@drawable/checkbox_selector"
         android:checkable="true"
-        android:text="@{topping.name}"
+        android:text="@string/topping_name"
         android:textColor="@color/material_dynamic_neutral30"
         android:textSize="20sp" />
 
 </FrameLayout>
+
 
