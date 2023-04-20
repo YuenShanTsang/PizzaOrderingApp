@@ -2,6 +2,7 @@ package com.example.pizzaorderingapp
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +12,15 @@ import android.widget.CheckedTextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pizzaorderingapp.databinding.ActivityMainBinding
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
 
     // View binding
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var sharedPreferences: SharedPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,11 +39,19 @@ class MainActivity : AppCompatActivity() {
             val selectedToppingsString = selectedToppings.joinToString(", ")
             Toast.makeText(this, "Selected toppings: $selectedToppingsString", Toast.LENGTH_SHORT).show()
 
+            // Save the order in shared preferences
+            val ordersJson = sharedPreferences.getString("orders", "[]")
+            val orders = Gson().fromJson(ordersJson, Array<PastOrder.Order>::class.java).toMutableList()
+            orders.add(PastOrder.Order(selectedToppings))
+            val newOrdersJson = Gson().toJson(orders)
+            sharedPreferences.edit().putString("orders", newOrdersJson).apply()
+
             val intent = Intent(this, PastOrder::class.java)
             intent.putStringArrayListExtra("selectedToppings", ArrayList(selectedToppings))
             startActivity(intent)
         }
 
+        sharedPreferences = getSharedPreferences("orders", Context.MODE_PRIVATE)
     }
 
     // Topping items

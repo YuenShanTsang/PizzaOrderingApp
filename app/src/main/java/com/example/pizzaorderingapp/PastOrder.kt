@@ -1,10 +1,15 @@
 package com.example.pizzaorderingapp
 
+import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ListView
+import android.widget.CheckedTextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pizzaorderingapp.databinding.ActivityPastOrderBinding
+import com.google.gson.Gson
 
 class PastOrder : AppCompatActivity() {
 
@@ -18,26 +23,30 @@ class PastOrder : AppCompatActivity() {
         binding = ActivityPastOrderBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val selectedToppings = intent.getStringArrayListExtra("selectedToppings")
+        // Retrieve the saved orders from shared preferences
+        val ordersJson = getSharedPreferences("orders", Context.MODE_PRIVATE).getString("orders", "[]")
+        val orders = Gson().fromJson(ordersJson, Array<Order>::class.java)
 
-        // Display the selected toppings
-        binding.requestedTextView.text = selectedToppings?.joinToString()
-
-        // Concatenate the selected toppings into a single string
-        val toppingsString = selectedToppings?.joinToString()
-
-        // Create an adapter to display the selected toppings in the ListView
-        val adapter = ArrayAdapter<String>(
-            this,
-            android.R.layout.simple_list_item_multiple_choice,
-            listOf(toppingsString)
-        )
+        // Create an adapter to display the orders in the ListView
+        val adapter = OrderAdapter(this, orders.toList())
 
         // Set the adapter on the ListView
         binding.selectedToppingsListView.adapter = adapter
-
-        // Enable multiple item selection on the ListView
-        binding.selectedToppingsListView.choiceMode = ListView.CHOICE_MODE_MULTIPLE
     }
 
+    data class Order(val toppings: List<String>)
+
+    class OrderAdapter(context: Context, orders: List<Order>) : ArrayAdapter<Order>(context, R.layout.past_order, orders) {
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.past_order, parent, false)
+
+            val toppingsTextView = view.findViewById<CheckedTextView>(R.id.past_order_item_checkbox)
+
+            val order = getItem(position)
+            toppingsTextView.text = order?.toppings!!.joinToString(", ")
+
+            return view
+        }
+    }
 }
