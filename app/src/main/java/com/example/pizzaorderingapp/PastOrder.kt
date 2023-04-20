@@ -61,6 +61,8 @@ class PastOrder : AppCompatActivity() {
                 adapter.addAll(updatedOrders)
                 adapter.notifyDataSetChanged()
                 selectedOrderPosition = -1
+                Toast.makeText(this, "Successfully deleted!", Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 Toast.makeText(this, "Please select an order to delete", Toast.LENGTH_SHORT)
                     .show()

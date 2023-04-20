@@ -4,14 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.CheckedTextView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.pizzaorderingapp.databinding.ActivityMainBinding
 import com.google.gson.Gson
 
@@ -40,14 +36,16 @@ class MainActivity : AppCompatActivity() {
         binding.submitButton.setOnClickListener {
             val selectedToppings = adapter.getSelectedToppings()
             if (selectedToppings.isEmpty()) {
-                Toast.makeText(this, "Please select at least one topping", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please select at least one topping", Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 selectedToppings.joinToString(", ")
                 Toast.makeText(this, "Successful!", Toast.LENGTH_SHORT).show()
 
                 // Save the order in shared preferences
                 val ordersJsonStr = sharedPreferences.getString("orders", "[]")
-                val orders = Gson().fromJson(ordersJsonStr, Array<Order>::class.java).toMutableList()
+                val orders =
+                    Gson().fromJson(ordersJsonStr, Array<Order>::class.java).toMutableList()
                 orders.add(Order(selectedToppings))
                 val newOrdersJsonStr = Gson().toJson(orders)
                 sharedPreferences.edit().putString("orders", newOrdersJsonStr).apply()
@@ -59,8 +57,41 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-}
 
+    // Add night switch in menu of the action bar
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        val item = menu.findItem(R.id.night_switch)
+        val switchView = item.actionView as Switch
+
+        // Set the switch state based on the current night mode
+        switchView.isChecked =
+            AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+
+        // Set a listener for changes to the switch state
+        switchView.setOnCheckedChangeListener { _, isChecked ->
+            val mode =
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+            AppCompatDelegate.setDefaultNightMode(mode)
+        }
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.order_item -> {
+                // Go to main activity
+                val intent = Intent(this, PastOrder::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+}
 // Topping items
 enum class Topping(val toppings: String, val price: Double) {
     Pepperoni("Pepperoni", 0.99),
