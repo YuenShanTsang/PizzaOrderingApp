@@ -14,6 +14,6 @@
 
     <!--Activity Past Order-->
     <string name="pastOrder_text">Past Order</string>
-    <string name="edit_button">Edit Order</string>
+    <string name="newOrder_button">New Order</string>
     <string name="delete_button">Delete</string>
 </resources>

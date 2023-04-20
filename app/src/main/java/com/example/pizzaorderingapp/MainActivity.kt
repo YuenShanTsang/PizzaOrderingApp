@@ -36,26 +36,6 @@ class MainActivity : AppCompatActivity() {
         val adapter = ToppingAdapter(this)
         binding.toppingListView.adapter = adapter
 
-        // Retrieve previously selected toppings from shared preferences
-        if (intent.getBooleanExtra("is_editing", false)) {
-            val ordersJson = sharedPreferences.getString("orders", "[]")
-            val orders = Gson().fromJson(ordersJson, Array<Order>::class.java)
-            if (orders.isNotEmpty()) {
-                val lastOrder = orders.last()
-                val selectedToppings = lastOrder.toppings
-                // Add the selected toppings to the adapter
-                for (topping in selectedToppings) {
-                    adapter.addSelectedTopping(topping)
-                }
-                // Calculate total price and update price text view
-                var totalPrice = 0.0
-                for (topping in selectedToppings) {
-                    totalPrice += Topping.valueOf(topping).price
-                }
-                binding.priceTextView.text = String.format("$%.2f", totalPrice)
-            }
-        }
-
         // Set up submit button click listener
         binding.submitButton.setOnClickListener {
             val selectedToppings = adapter.getSelectedToppings()
@@ -79,11 +59,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
-
 }
 
 // Topping items
@@ -96,8 +71,8 @@ enum class Topping(val toppings: String, val price: Double) {
     Bacon("Bacon", 1.79),
     Ham("Ham", 1.29),
     Pineapple("Pineapple", 0.89),
-    GreenPepper("Green Pepper", 0.69),
-    BlackOlives("Black Olives", 0.99)
+    Spinach("Spinach", 0.69),
+    Olives("Olives", 0.99)
 }
 class ToppingAdapter(private val context: Context) : BaseAdapter() {
 
@@ -146,11 +121,6 @@ class ToppingAdapter(private val context: Context) : BaseAdapter() {
 
     fun getSelectedToppings(): List<String> {
         return selectedToppings
-    }
-
-    fun addSelectedTopping(topping: String) {
-        selectedToppings.add(topping)
-        notifyDataSetChanged() // update the view
     }
 
 }

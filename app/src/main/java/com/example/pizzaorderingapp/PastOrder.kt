@@ -1,12 +1,12 @@
 package com.example.pizzaorderingapp
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CheckedTextView
 import android.widget.Toast
@@ -40,37 +40,17 @@ class PastOrder : AppCompatActivity() {
         // Set the adapter on the ListView
         binding.selectedToppingsListView.adapter = adapter
 
-
-        binding.selectedToppingsListView.setOnItemClickListener { _, _, position, _ ->
+        binding.selectedToppingsListView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             orders.forEach { it.isChecked = false }
             orders[position].isChecked = true
             selectedOrderPosition = position
             adapter.notifyDataSetChanged()
         }
 
-        binding.editButton.setOnClickListener {
-            if (selectedOrderPosition >= 0) {
-                // Retrieve the selected toppings from the order
-                val selectedToppings = orders[selectedOrderPosition].toppings
-
-                // Pass the selected toppings back to the main activity for editing
-                val returnIntent = Intent()
-                returnIntent.putExtra("selected_toppings", selectedToppings.toTypedArray())
-                setResult(Activity.RESULT_OK, returnIntent)
-
-                val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("is_editing", true) // add this line
-                startActivity(intent)
-
-                // Move finish() call to after startActivity()
-                finish()
-            } else {
-                Toast.makeText(this, "Please select an order to edit", Toast.LENGTH_SHORT)
-                    .show()
-            }
+        binding.newOrderButton.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
-
-
 
         binding.deleteButton.setOnClickListener {
             if (selectedOrderPosition >= 0) {
@@ -86,7 +66,6 @@ class PastOrder : AppCompatActivity() {
                     .show()
             }
         }
-
     }
 
     private fun getSavedOrders(): List<Order> {
@@ -94,13 +73,13 @@ class PastOrder : AppCompatActivity() {
             getSharedPreferences("orders", Context.MODE_PRIVATE).getString("orders", "[]")
         return Gson().fromJson(ordersJson, Array<Order>::class.java).toList()
     }
+
     private fun updateSavedOrders(orders: List<Order>) {
         val editor = getSharedPreferences("orders", Context.MODE_PRIVATE).edit()
         val ordersJson = Gson().toJson(orders)
         editor.putString("orders", ordersJson)
         editor.apply()
     }
-
 }
 
 data class Order(val toppings: List<String>, var isChecked: Boolean = false)
