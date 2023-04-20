@@ -13,6 +13,7 @@
         app:actionViewClass="android.widget.Switch"
         app:showAsAction="always"/>
 
+    <!--To Past Order-->
     <item android:id="@+id/order_item"
         android:icon="@drawable/order_icon"
         android:title="@string/order_text" />
