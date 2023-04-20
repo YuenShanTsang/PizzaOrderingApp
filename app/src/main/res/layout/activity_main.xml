@@ -76,29 +76,24 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <!--Request Text-->
+        <!--Title: Total price-->
         <TextView
-            android:id="@+id/request_text_view"
+            android:id="@+id/total_price_text_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/request_text"
+            android:text="@string/totalPrice_text"
             android:textSize="20sp" />
 
-        <!--User Input-->
-        <EditText
-            android:id="@+id/input_edit_text"
+        <!--Price display-->
+        <TextView
+            android:id="@+id/price_text_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:ems="15"
-            android:hint="@string/input_editText"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:minHeight="48dp"
-            android:padding="10dp"
-            tools:ignore="LabelFor,VisualLintTextFieldSize" />
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="@string/price_text"
+            android:textSize="20sp" />
 
         <!--Submit Button-->
         <Button

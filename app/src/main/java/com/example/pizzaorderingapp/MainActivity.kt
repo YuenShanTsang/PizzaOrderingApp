@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.CheckedTextView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pizzaorderingapp.databinding.ActivityMainBinding
@@ -36,41 +37,49 @@ class MainActivity : AppCompatActivity() {
         // Set up submit button click listener
         binding.submitButton.setOnClickListener {
             val selectedToppings = adapter.getSelectedToppings()
-            val selectedToppingsString = selectedToppings.joinToString(", ")
-            Toast.makeText(this, "Selected toppings: $selectedToppingsString", Toast.LENGTH_SHORT).show()
+            if (selectedToppings.isEmpty()) {
+                Toast.makeText(this, "Please select at least one topping", Toast.LENGTH_SHORT).show()
+            } else {
+                selectedToppings.joinToString(", ")
+                Toast.makeText(this, "Successful!", Toast.LENGTH_SHORT).show()
 
-            // Save the order in shared preferences
-            val ordersJson = sharedPreferences.getString("orders", "[]")
-            val orders = Gson().fromJson(ordersJson, Array<PastOrder.Order>::class.java).toMutableList()
-            orders.add(PastOrder.Order(selectedToppings))
-            val newOrdersJson = Gson().toJson(orders)
-            sharedPreferences.edit().putString("orders", newOrdersJson).apply()
+                // Save the order in shared preferences
+                val ordersJson = sharedPreferences.getString("orders", "[]")
+                val orders = Gson().fromJson(ordersJson, Array<PastOrder.Order>::class.java).toMutableList()
+                orders.add(PastOrder.Order(selectedToppings))
+                val newOrdersJson = Gson().toJson(orders)
+                sharedPreferences.edit().putString("orders", newOrdersJson).apply()
 
-            val intent = Intent(this, PastOrder::class.java)
-            intent.putStringArrayListExtra("selectedToppings", ArrayList(selectedToppings))
-            startActivity(intent)
+                val intent = Intent(this, PastOrder::class.java)
+                intent.putStringArrayListExtra("selectedToppings", ArrayList(selectedToppings))
+                startActivity(intent)
+            }
         }
+
 
         sharedPreferences = getSharedPreferences("orders", Context.MODE_PRIVATE)
     }
 
     // Topping items
-    enum class Topping(val toppings: String) {
-        Pepperoni("Pepperoni"),
-        Mushroom("Mushroom"),
-        ExtraCheese("Extra Cheese"),
-        Sausage("Sausage"),
-        Onion("Onion"),
-        Bacon("Bacon"),
-        Ham("Ham"),
-        Pineapple("Pineapple"),
-        GreenPepper("Green Pepper"),
-        BlackOlives("Black Olives")
+    enum class Topping(val toppings: String, val price: Double) {
+        Pepperoni("Pepperoni", 0.99),
+        Mushroom("Mushroom", 0.79),
+        ExtraCheese("Extra Cheese", 1.29),
+        Sausage("Sausage", 1.49),
+        Onion("Onion", 0.69),
+        Bacon("Bacon", 1.79),
+        Ham("Ham", 1.29),
+        Pineapple("Pineapple", 0.89),
+        GreenPepper("Green Pepper", 0.69),
+        BlackOlives("Black Olives", 0.99)
     }
+
 
     class ToppingAdapter(private val context: Context) : BaseAdapter() {
 
         private val selectedToppings = mutableListOf<String>()
+
+        private var totalPrice = 0.0
 
         override fun getCount(): Int {
             return Topping.values().size
@@ -87,19 +96,25 @@ class MainActivity : AppCompatActivity() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.topping_item, parent, false)
 
+            val priceText: TextView = (context as MainActivity).findViewById(R.id.price_text_view)
+
             val toppingName = view.findViewById<CheckedTextView>(R.id.topping_name)
             val topping = getItem(position) as Topping
-            toppingName.text = topping.toppings
+            toppingName.text = "${topping.toppings} - $${topping.price}"
             toppingName.isChecked = selectedToppings.contains(topping.toppings)
 
             view.setOnClickListener {
                 val isChecked = !selectedToppings.contains(topping.toppings)
                 if (isChecked) {
                     selectedToppings.add(topping.toppings)
+                    totalPrice += topping.price
                 } else {
                     selectedToppings.remove(topping.toppings)
+                    totalPrice -= topping.price
                 }
                 toppingName.isChecked = isChecked
+                priceText.text = String.format("$%.2f", totalPrice)
+
             }
 
             return view

@@ -10,7 +10,7 @@
         android:id="@+id/past_order_item_checkbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checkMark="@drawable/checkbox_selector"
+        android:checkMark="?android:attr/listChoiceIndicatorSingle"
         android:gravity="center_vertical"
         android:layout_margin="15dp"
         android:padding="16dp"
